@@ -1,7 +1,7 @@
 import React from "react";
 import { restaurant_restaurant_restaurant_menu_options } from "../__generated__/restaurant";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 
 interface IDishProps {
   id?: number;
