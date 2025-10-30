@@ -1,3 +1,3 @@
 {
-  "baseUrl": "https://ubereats-frontend.netlify.app/"
+  "baseUrl": "http://localhost:3000"
 }
