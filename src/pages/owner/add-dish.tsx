@@ -83,10 +83,15 @@ export const AddDish = () => {
         const actualFile = file[0];
         formBody.append("file", actualFile);
 
-        const response = await fetch(`http://localhost:4000/uploads`, {
-          method: "POST",
-          body: formBody,
-        });
+        const response = await fetch(
+          process.env.NODE_ENV === "production"
+            ? `https://${process.env.BACKEND_DEPLOY_URL}/uploads`
+            : `http://localhost:4000/uploads`,
+          {
+            method: "POST",
+            body: formBody,
+          }
+        );
 
         if (!response.ok) {
           throw new Error(

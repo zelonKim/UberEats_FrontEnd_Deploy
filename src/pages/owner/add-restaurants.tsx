@@ -122,10 +122,15 @@ export const AddRestaurant = () => {
 
       console.log("Uploading file:", actualFile.name);
 
-      const response = await fetch(`http://localhost:4000/uploads`, {
-        method: "POST",
-        body: formBody,
-      });
+      const response = await fetch(
+        process.env.NODE_ENV === "production"
+          ? `https://${process.env.BACKEND_DEPLOY_URL}/uploads`
+          : `http://localhost:4000/uploads`,
+        {
+          method: "POST",
+          body: formBody,
+        }
+      );
 
       if (!response.ok) {
         throw new Error(

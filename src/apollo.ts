@@ -15,7 +15,10 @@ export const isLoggedInVar = makeVar(Boolean(token));
 export const authTokenVar = makeVar(token);
 
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:4000/graphql`,
+  uri:
+    process.env.NODE_ENV === "production"
+      ? `wss://${process.env.BACKEND_DEPLOY_URL}/graphql`
+      : `ws://localhost:4000/graphql`,
   options: {
     reconnect: true,
     connectionParams: {
@@ -25,7 +28,10 @@ const wsLink = new WebSocketLink({
 });
 
 const httpLink = createHttpLink({
-  uri: `http://localhost:4000/graphql`,
+  uri:
+    process.env.NODE_ENV === "production"
+      ? `https://${process.env.BACKEND_DEPLOY_URL}/graphql`
+      : `http://localhost:4000/graphql`,
 });
 
 const authLink = setContext((_, { headers }) => {
