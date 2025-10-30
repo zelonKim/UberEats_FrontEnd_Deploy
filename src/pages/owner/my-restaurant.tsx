@@ -59,14 +59,14 @@ const CREATE_PAYMENT_MUTATION = gql`
   }
 `;
 
-const PENDING_ORDERS_SUBSCRIPTION = gql`
-  subscription pendingOrders {
-    pendingOrders {
-      ...FullOrderParts
-    }
-  }
-  ${FULL_ORDER_FRAGMENT}
-`;
+// const PENDING_ORDERS_SUBSCRIPTION = gql`
+//   subscription pendingOrders {
+//     pendingOrders {
+//       ...FullOrderParts
+//     }
+//   }
+//   ${FULL_ORDER_FRAGMENT}
+// `;
 
 interface IParams {
   id: string;
@@ -75,7 +75,18 @@ interface IParams {
 export const MyRestaurant = () => {
   const { id } = useParams<IParams>();
 
-  const { data } = useQuery<myRestaurant, myRestaurantVariables>(
+  // const { data } = useQuery<myRestaurant, myRestaurantVariables>(
+  //   MY_RESTAURANT_QUERY,
+  //   {
+  //     variables: {
+  //       input: {
+  //         id: +id,
+  //       },
+  //     },
+  //   }
+  // );
+
+  const { data, refetch } = useQuery<myRestaurant, myRestaurantVariables>(
     MY_RESTAURANT_QUERY,
     {
       variables: {
@@ -83,8 +94,10 @@ export const MyRestaurant = () => {
           id: +id,
         },
       },
+      pollInterval: 2000, // 2초 마다 데이터 새로고침
     }
   );
+
 
   const onCompleted = (data: createPayment) => {
     if (data.createPayment.ok) {
@@ -123,17 +136,27 @@ export const MyRestaurant = () => {
     }
   };
 
-  const { data: subscriptionData } = useSubscription<pendingOrders>(
-    PENDING_ORDERS_SUBSCRIPTION
-  );
-
   const history = useHistory();
 
+  // const { data: subscriptionData } = useSubscription<pendingOrders>(
+  //   PENDING_ORDERS_SUBSCRIPTION
+  // );
+
+  // useEffect(() => {
+  //   if (subscriptionData?.pendingOrders.id) {
+  //     history.push(`/orders/${subscriptionData.pendingOrders.id}`);
+  //   }
+  // }, [subscriptionData, history]);
+
   useEffect(() => {
-    if (subscriptionData?.pendingOrders.id) {
-      history.push(`/orders/${subscriptionData.pendingOrders.id}`);
+    const latestOrder = data?.myRestaurant.restaurant?.orders
+      ?.slice()
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
+    if (latestOrder && latestOrder.status === "Pending") {
+      history.push(`/orders/${latestOrder.id}`);
     }
-  }, [subscriptionData, history]);
+  }, [data, history]);
+
 
   return (
     <div>

@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { MyRestaurantInput } from "./globalTypes";
+import { MyRestaurantInput, OrderStatus } from "./globalTypes";
 
 // ====================================================
 // GraphQL query operation: myRestaurant
@@ -42,6 +42,7 @@ export interface myRestaurant_myRestaurant_restaurant_orders {
   id: number;
   createdAt: any;
   total: number | null;
+  status: OrderStatus;
 }
 
 export interface myRestaurant_myRestaurant_restaurant {

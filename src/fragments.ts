@@ -46,6 +46,7 @@ export const ORDERS_FRAGMENT = gql`
     id
     createdAt
     total
+    status
   }
 `;
 

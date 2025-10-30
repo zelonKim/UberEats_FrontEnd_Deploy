@@ -1,19 +1,30 @@
 import React, { useEffect, useState } from "react";
 import GoogleMapReact from "google-map-react";
-import { gql, useMutation, useSubscription } from "@apollo/client";
+import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
 import { FULL_ORDER_FRAGMENT } from "../../fragments";
 import { coockedOrders } from "../../__generated__/coockedOrders";
 import { Link, useHistory } from "react-router-dom";
 import { takeOrder, takeOrderVariables } from "../../__generated__/takeOrder";
 
-const COOCKED_ORDERS_SUBSCRIPTION = gql`
-  subscription coockedOrders {
+// const COOCKED_ORDERS_SUBSCRIPTION = gql`
+//   subscription coockedOrders {
+//     cookedOrders {
+//       ...FullOrderParts
+//     }
+//   }
+//   ${FULL_ORDER_FRAGMENT}
+// `;
+
+const COOCKED_ORDERS_QUERY = gql`
+  query coockedOrders {
     cookedOrders {
       ...FullOrderParts
     }
   }
   ${FULL_ORDER_FRAGMENT}
 `;
+
+
 
 const TAKE_ORDER_MUTATION = gql`
   mutation takeOrder($input: TakeOrderInput!) {
@@ -113,8 +124,14 @@ export const Dashboard = () => {
     }
   };
 
-  const { data: coockedOrdersData } = useSubscription<coockedOrders>(
-    COOCKED_ORDERS_SUBSCRIPTION
+  // const { data: coockedOrdersData } = useSubscription<coockedOrders>(
+  //   COOCKED_ORDERS_SUBSCRIPTION
+  // );
+
+
+  const { data: coockedOrdersData } = useQuery<coockedOrders>(
+    COOCKED_ORDERS_QUERY,
+    { pollInterval: 2000 } // 2초마다 새로고침
   );
 
   useEffect(() => {
