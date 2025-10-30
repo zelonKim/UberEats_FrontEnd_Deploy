@@ -83,7 +83,7 @@ export const AddDish = () => {
         const actualFile = file[0];
         formBody.append("file", actualFile);
 
-        const response = await fetch("http://localhost:4000/uploads", {
+        const response = await fetch(`https://uber-eats-backend-701bf2fe6dd6.herokuapp.com/uploads`, {
           method: "POST",
           body: formBody,
         });

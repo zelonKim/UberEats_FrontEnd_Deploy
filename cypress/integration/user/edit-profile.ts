@@ -10,7 +10,7 @@ describe("Edit Profile", () => {
     user.title().should("eq", "Edit Profile | Nuber Eats");
   });
   it("can change email", () => {
-    user.intercept("POST", "http://localhost:4000/graphql", (req) => {
+    user.intercept("POST", `https://uber-eats-backend-701bf2fe6dd6.herokuapp.com/graphql`, (req) => {
       if (req.body?.operationName === "editProfile") {
         // @ts-ignore
         req.body?.variables?.input?.email = "nico@nomadcoders.co";

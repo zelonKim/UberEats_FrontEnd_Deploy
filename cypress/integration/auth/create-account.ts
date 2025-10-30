@@ -15,7 +15,7 @@ describe("Create Account", () => {
     user.findByRole("alert").should("have.text", "Password is required");
   });
   it("should be able to create account and login", () => {
-    user.intercept("http://localhost:4000/graphql", (req) => {
+    user.intercept(`https://uber-eats-backend-701bf2fe6dd6.herokuapp.com/graphql`, (req) => {
       const { operationName } = req.body;
       if (operationName && operationName === "createAccountMutation") {
         req.reply((res) => {

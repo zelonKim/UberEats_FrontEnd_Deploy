@@ -15,10 +15,7 @@ export const isLoggedInVar = makeVar(Boolean(token));
 export const authTokenVar = makeVar(token);
 
 const wsLink = new WebSocketLink({
-  uri:
-    process.env.NODE_ENV === "production"
-      ? `wss://uber-eats-backend-701bf2fe6dd6.herokuapp.com/graphql`
-      : `ws://localhost:4000/graphql`,
+  uri: `wss://uber-eats-backend-701bf2fe6dd6.herokuapp.com/graphql`,
   options: {
     reconnect: true,
     connectionParams: {
@@ -28,10 +25,7 @@ const wsLink = new WebSocketLink({
 });
 
 const httpLink = createHttpLink({
-  uri:
-    process.env.NODE_ENV === "production"
-      ? `https://uber-eats-backend-701bf2fe6dd6.herokuapp.com/graphql`
-      : `http://localhost:4000/graphql`,
+  uri: `https://uber-eats-backend-701bf2fe6dd6.herokuapp.com/graphql`,
 });
 
 const authLink = setContext((_, { headers }) => {

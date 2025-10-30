@@ -122,7 +122,7 @@ export const AddRestaurant = () => {
 
       console.log("Uploading file:", actualFile.name);
 
-      const response = await fetch("http://localhost:4000/uploads", {
+      const response = await fetch(`https://uber-eats-backend-701bf2fe6dd6.herokuapp.com/uploads`, {
         method: "POST",
         body: formBody,
       });
