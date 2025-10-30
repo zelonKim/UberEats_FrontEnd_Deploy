@@ -1,12 +1,7 @@
 import {
-  faUser,
   faSignOutAlt,
-  faArrowRight,
-  faArrowCircleRight,
-  faUserAlt,
   faUserCircle,
   faBell,
-  faReceipt,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
