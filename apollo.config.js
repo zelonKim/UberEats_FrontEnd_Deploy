@@ -6,7 +6,7 @@ module.exports = {
       name: "nuber-eats-backend",
       url:
         process.env.NODE_ENV === "production"
-          ? `https://${process.env.BACKEND_DEPLOY_URL}/graphql`
+          ? `https://${process.env.REACT_APP_BACKEND_DEPLOY_URL}/graphql`
           : `http://localhost:4000/graphql`,
     },
   },

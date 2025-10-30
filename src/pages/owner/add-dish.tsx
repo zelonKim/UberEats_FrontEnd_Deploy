@@ -85,7 +85,7 @@ export const AddDish = () => {
 
         const response = await fetch(
           process.env.NODE_ENV === "production"
-            ? `https://${process.env.BACKEND_DEPLOY_URL}/uploads`
+            ? `https://${process.env.REACT_APP_BACKEND_DEPLOY_URL}/uploads`
             : `http://localhost:4000/uploads`,
           {
             method: "POST",

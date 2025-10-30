@@ -17,7 +17,7 @@ export const authTokenVar = makeVar(token);
 const wsLink = new WebSocketLink({
   uri:
     process.env.NODE_ENV === "production"
-      ? `wss://${process.env.BACKEND_DEPLOY_URL}/graphql`
+      ? `wss://${process.env.REACT_APP_BACKEND_DEPLOY_URL}/graphql`
       : `ws://localhost:4000/graphql`,
   options: {
     reconnect: true,
@@ -30,7 +30,7 @@ const wsLink = new WebSocketLink({
 const httpLink = createHttpLink({
   uri:
     process.env.NODE_ENV === "production"
-      ? `https://${process.env.BACKEND_DEPLOY_URL}/graphql`
+      ? `https://${process.env.REACT_APP_BACKEND_DEPLOY_URL}/graphql`
       : `http://localhost:4000/graphql`,
 });
 
