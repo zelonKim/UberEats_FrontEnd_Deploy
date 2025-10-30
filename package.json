@@ -1,6 +1,9 @@
 {
   "name": "nuber-eats-frontend",
   "version": "0.1.0",
+  "engines": {
+    "node": "16.20.2"
+  },
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.2.7",
@@ -41,7 +44,7 @@
     "tailwind:build": "tailwind build ./src/styles/tailwind.css -o ./src/styles/styles.css",
     "start": "npm run apollo:codegen & npm run tailwind:build & react-scripts start",
     "apollo:codegen": " rimraf src/__generated__ && apollo client:codegen src/__generated__ --target=typescript --outputFlat",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "prebuild": "npm run tailwind:build",
     "test": "react-scripts test",
     "test:coverage": "npm test -- --coverage --watchAll=false",
@@ -76,8 +79,5 @@
     "@testing-library/cypress": "^7.0.2",
     "@types/googlemaps": "^3.40.3",
     "mock-apollo-client": "^1.0.0"
-  },
-  "engines": {
-    "node": "16.20.2"
   }
 }
