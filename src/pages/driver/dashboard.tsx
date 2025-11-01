@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import GoogleMapReact from "google-map-react";
 import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
 import { FULL_ORDER_FRAGMENT } from "../../fragments";
-import { driverGetOrders } from "../../__generated__/driverGetOrders";
 import { useHistory } from "react-router-dom";
 import { takeOrder, takeOrderVariables } from "../../__generated__/takeOrder";
 

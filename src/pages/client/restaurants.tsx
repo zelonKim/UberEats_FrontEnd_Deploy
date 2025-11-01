@@ -107,7 +107,7 @@ export const Restaurants = () => {
 
       {!loading && (
         <div className="max-w-screen-2xl pb-8 mx-auto  px-6">
-          <div className="flex justify-around max-w-sm mx-auto ">
+          <div className="flex justify-center gap-12 max-w-2xl mx-auto ">
             {data?.allCategories.categories?.map((category) => (
               <Link key={category.id} to={`/category/${category.slug}`}>
                 <div className="flex flex-col group items-center cursor-pointer mt-6">
