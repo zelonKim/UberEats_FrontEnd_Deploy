@@ -2,21 +2,12 @@ import React, { useEffect, useState } from "react";
 import GoogleMapReact from "google-map-react";
 import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
 import { FULL_ORDER_FRAGMENT } from "../../fragments";
-import { coockedOrders } from "../../__generated__/coockedOrders";
-import { Link, useHistory } from "react-router-dom";
+import { driverGetOrders } from "../../__generated__/driverGetOrders";
+import { useHistory } from "react-router-dom";
 import { takeOrder, takeOrderVariables } from "../../__generated__/takeOrder";
 
-// const COOCKED_ORDERS_SUBSCRIPTION = gql`
-//   subscription coockedOrders {
-//     cookedOrders {
-//       ...FullOrderParts
-//     }
-//   }
-//   ${FULL_ORDER_FRAGMENT}
-// `;
-
-const COOCKED_ORDERS_QUERY = gql`
-  query coockedOrders {
+const COOCKED_ORDERS_SUBSCRIPTION = gql`
+  subscription coockedOrders {
     cookedOrders {
       ...FullOrderParts
     }
@@ -24,7 +15,18 @@ const COOCKED_ORDERS_QUERY = gql`
   ${FULL_ORDER_FRAGMENT}
 `;
 
-
+// const COOCKED_ORDERS_QUERY = gql`
+//   query driverGetOrders {
+//     getOrders(input: {}) {
+//       ok
+//       error
+//       orders {
+//         ...FullOrderParts
+//       }
+//     }
+//   }
+//   ${FULL_ORDER_FRAGMENT}
+// `;
 
 const TAKE_ORDER_MUTATION = gql`
   mutation takeOrder($input: TakeOrderInput!) {
@@ -124,27 +126,31 @@ export const Dashboard = () => {
     }
   };
 
-  // const { data: coockedOrdersData } = useSubscription<coockedOrders>(
-  //   COOCKED_ORDERS_SUBSCRIPTION
-  // );
-
-
-  const { data: coockedOrdersData } = useQuery<coockedOrders>(
-    COOCKED_ORDERS_QUERY,
-    { pollInterval: 2000 } // 2초마다 새로고침
+  const { data: coockedOrdersData } = useSubscription(
+    COOCKED_ORDERS_SUBSCRIPTION
   );
 
+  // const { data: coockedOrdersData } = useQuery<driverGetOrders>(
+  //   COOCKED_ORDERS_QUERY,
+  //   { pollInterval: 2000 } // 2초마다 새로고침
+  // );
+
+  // 조리 완료된 첫 번째 주문을 가져옵니다
+  const cookedOrder = Array.isArray(coockedOrdersData?.cookedOrders)
+    ? coockedOrdersData?.cookedOrders[0]
+    : coockedOrdersData?.cookedOrders;
+
   useEffect(() => {
-    if (coockedOrdersData?.cookedOrders.id) {
+    if (cookedOrder?.id) {
       makeRoute();
     }
-  }, [coockedOrdersData]);
+  }, [cookedOrder]);
 
   const history = useHistory();
 
   const onCompleted = (data: takeOrder) => {
-    if (data.takeOrder.ok) {
-      history.push(`/orders/${coockedOrdersData?.cookedOrders.id}`);
+    if (data.takeOrder.ok && cookedOrder) {
+      history.push(`/orders/${cookedOrder.id}`);
     }
   };
   const [takeOrderMutation] = useMutation<takeOrder, takeOrderVariables>(
@@ -182,10 +188,10 @@ export const Dashboard = () => {
       </div>
 
       <div className=" max-w-screen-sm mx-auto bg-white relative -top-16 shadow-lg pt-4 pb-8 px-5">
-        {coockedOrdersData?.cookedOrders.restaurant ? (
+        {cookedOrder?.restaurant ? (
           <>
             <h1 className="text-center my-3 text-2xl font-semibold">
-              {coockedOrdersData?.cookedOrders.restaurant?.name}
+              {cookedOrder.restaurant?.name}
               로부터
             </h1>
 
@@ -193,9 +199,7 @@ export const Dashboard = () => {
               배달 요청이 들어왔습니다.
             </h1>
             <button
-              onClick={() =>
-                triggerMutation(coockedOrdersData?.cookedOrders.id)
-              }
+              onClick={() => triggerMutation(cookedOrder.id)}
               className="btn rounded-md w-2/3 ml-24 block  text-center mt-5"
             >
               배달 승인하기 &rarr;

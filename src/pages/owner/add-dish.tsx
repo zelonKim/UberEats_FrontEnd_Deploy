@@ -10,11 +10,7 @@ import {
 } from "../../__generated__/createDish";
 import { MY_RESTAURANT_QUERY } from "./my-restaurant";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrash,
-  faTrashAlt,
-  faTrashRestore,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 interface IParams {
   restaurantId: string;
@@ -228,6 +224,7 @@ export const AddDish = () => {
             ))}
         </div>
         <Button
+          disabled={uploading}
           loading={uploading || loading}
           canClick={formState.isValid}
           actionText="등록하기"

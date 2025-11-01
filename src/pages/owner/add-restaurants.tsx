@@ -230,6 +230,7 @@ export const AddRestaurant = () => {
         )}
 
         <Button
+          disabled={uploading}
           loading={uploading}
           canClick={formState.isValid}
           actionText="등록하기"
