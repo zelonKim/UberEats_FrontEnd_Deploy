@@ -3,32 +3,30 @@ import {
   InMemoryCache,
   makeVar,
   createHttpLink,
-  split,
+  // split, // WebSocket 비활성화로 인해 사용하지 않음
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { WebSocketLink } from "@apollo/client/link/ws";
-import { getMainDefinition } from "@apollo/client/utilities";
+// import { WebSocketLink } from "@apollo/client/link/ws"; // WebSocket 비활성화
+// import { getMainDefinition } from "@apollo/client/utilities"; // WebSocket 비활성화
 import { LOCALSTORAGE_TOKEN } from "./constants";
 
 const token = localStorage.getItem(LOCALSTORAGE_TOKEN);
 export const isLoggedInVar = makeVar(Boolean(token));
 export const authTokenVar = makeVar(token);
 
-
-// 에러 방지를 위해 웹소켓 기능 중단
-const wsLink = new WebSocketLink({
-  uri:
-    process.env.NODE_ENV === "production"
-      ? `wss://${process.env.REACT_APP_BACKEND_DEPLOY_URL}/graphql`
-      : `ws://localhost:4000/graphql`,
-  options: {
-    reconnect: true,
-    connectionParams: {
-      "x-jwt": authTokenVar() || "",
-    },
-  },
-});
-
+// WebSocket 완전 비활성화 - 배포 환경에서 타임아웃 및 연결 문제 해결
+// const wsLink = new WebSocketLink({
+//   uri:
+//     process.env.NODE_ENV === "production"
+//       ? `wss://${process.env.REACT_APP_BACKEND_DEPLOY_URL}/graphql`
+//       : `ws://localhost:4000/graphql`,
+//   options: {
+//     reconnect: true,
+//     connectionParams: {
+//       "x-jwt": authTokenVar() || "",
+//     },
+//   },
+// });
 
 const httpLink = createHttpLink({
   uri:
@@ -46,21 +44,21 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-const splitLink = split(
-  ({ query }) => {
-    const definition = getMainDefinition(query);
-    return (
-      definition.kind === "OperationDefinition" &&
-      definition.operation === "subscription"
-    );
-  },
-  wsLink,
-  authLink.concat(httpLink)
-);
+// WebSocket 비활성화 - HTTP만 사용
+// const splitLink = split(
+//   ({ query }) => {
+//     const definition = getMainDefinition(query);
+//     return (
+//       definition.kind === "OperationDefinition" &&
+//       definition.operation === "subscription"
+//     );
+//   },
+//   wsLink,
+//   authLink.concat(httpLink)
+// );
 
 export const client = new ApolloClient({
-  link: splitLink,
-  // link: authLink.concat(httpLink),
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache({
     typePolicies: {
       Query: {
