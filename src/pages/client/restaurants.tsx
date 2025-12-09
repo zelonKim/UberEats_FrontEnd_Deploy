@@ -42,7 +42,7 @@ interface IFormProps {
 export const Restaurants = () => {
   const [page, setPage] = useState(1);
 
-  const { data, loading } = useQuery<
+  const { data, loading, error } = useQuery<
     restaurantsPageQuery,
     restaurantsPageQueryVariables
   >(RESTAURANTS_QUERY, {
@@ -52,6 +52,20 @@ export const Restaurants = () => {
       },
     },
   });
+
+  // 디버깅: 데이터 확인
+  if (data) {
+    console.log('Restaurants Data:', {
+      allCategories: data.allCategories,
+      restaurants: data.restaurants,
+      restaurantsCount: data.restaurants?.results?.length,
+      categoriesCount: data.allCategories?.categories?.length,
+    });
+  }
+
+  if (error) {
+    console.error('GraphQL Error:', error);
+  }
 
   const onNextPageClick = () => setPage((current) => current + 1);
   const onPrevPageClick = () => setPage((current) => current - 1);
@@ -105,8 +119,26 @@ export const Restaurants = () => {
         </div>
       </form>
 
-      {!loading && (
+      {error && (
+        <div className="max-w-screen-2xl pb-8 mx-auto px-6">
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <p>에러가 발생했습니다: {error.message}</p>
+          </div>
+        </div>
+      )}
+
+      {!loading && data && (
         <div className="max-w-screen-2xl pb-8 mx-auto  px-6">
+          {!data.allCategories.ok && (
+            <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+              카테고리를 불러올 수 없습니다: {data.allCategories.error}
+            </div>
+          )}
+          {!data.restaurants.ok && (
+            <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+              레스토랑을 불러올 수 없습니다: {data.restaurants.error}
+            </div>
+          )}
           <div className="flex justify-center gap-12 max-w-2xl mx-auto ">
             {data?.allCategories.categories?.map((category) => (
               <Link key={category.id} to={`/category/${category.slug}`}>
